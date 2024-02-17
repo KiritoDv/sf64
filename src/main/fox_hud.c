@@ -1032,7 +1032,7 @@ void func_80087530(f32 x, f32 y, s32 number) {
 }
 
 void func_80087788(void) {
-    u16* D_800D1D18[] = { D_10050E0, D_100BAC0, D_100D900, D_10032A0 };
+    u16* D_800D1D18[] = { gFoxPortraitIdle, gPeppyPortraitIdle, gSlippyPortraitIdle, gFalcoPortraitIdle };
     u8* D_800D1D28[] = { D_5006CB0, D_5006E90, D_5006B30 };
     s32 shield;
     s32 D_800D1D34[] = { 48, 56, 48 }; // width
@@ -2771,10 +2771,10 @@ void func_8008C390(f32 arg0, f32 arg1, f32 arg2, s32 arg3) {
 
 void func_8008C5C8(f32 arg0, f32 arg1, f32 arg2, s32 arg3) {
     u16* D_800D1EE8[] = {
-        D_10050E0,
-        D_100BAC0,
-        D_100D900,
-        D_10032A0,
+        gFoxPortraitIdle,
+        gPeppyPortraitIdle,
+        gSlippyPortraitIdle,
+        gFalcoPortraitIdle,
     };
     s32 i;
 
@@ -3143,7 +3143,7 @@ void func_8008DE68(void) {
         TextureRect_4bCI(&gMasterDisp, D_1011A40, D_1011AB0, 32, 7, temp2, temp3, 1.0f, 1.0f);
 
         RCP_SetupDL(&gMasterDisp, 0x4C);
-        TextureRect_8bIA(&gMasterDisp, D_1002040, 40, 12, sp3C, temp1, 1.0f, 1.0f);
+        TextureRect_8bIA(&gMasterDisp, gBossTextHealthBorder, 40, 12, sp3C, temp1, 1.0f, 1.0f);
 
         if (sp3C >= 25.0f) {
             Math_SmoothStepToF(&D_801616C4, 0.88f, 0.3f, 0.2f, 0.1f);

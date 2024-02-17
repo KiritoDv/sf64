@@ -1,0 +1,47 @@
+:config:
+  segments:
+    seg1: 0x873CB0
+  header:
+    - '#include "assets/ast_common.h"'
+
+health_bar_boss_text:
+  { type: TEXTURE, offset: 0x1002040, format: IA8, width: 40, height: 12, ctype: u8, symbol: gBossTextHealthBorder }
+
+falco_portrait_idle:
+  { type: TEXTURE, offset: 0x10032A0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFalcoPortraitIdle },
+
+falco_portrait_talking:
+  { type: TEXTURE, offset: 0x10041C0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFalcoPortraitTalking }
+
+fox_portrait_idle:
+  { type: TEXTURE, offset: 0x10050E0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxPortraitIdle },
+
+fox_talking_idle:
+  { type: TEXTURE, offset: 0x1006000, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxPortraitTalking },
+
+fox_expert_portrait_idle:
+  { type: TEXTURE, offset: 0x1006F20, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxExpertPortraitIdle },
+
+fox_expert_portrait_talking:
+  { type: TEXTURE, offset: 0x1007E40, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxExpertPortraitTalking }
+
+static_portrait:
+  { type: TEXTURE, offset: 0x1008D60, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gStaticPortrait },
+
+rob64_portrait_idle:
+  { type: TEXTURE, offset: 0x1009C80, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gRob64PortraitIdle },
+
+rob64_portrait_talking:
+  { type: TEXTURE, offset: 0x100ABA0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gRob64PortraitTalking }
+
+peppy_portrait_idle:
+  { type: TEXTURE, offset: 0x100BAC0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gPeppyPortraitIdle },
+
+peppy_portrait_talking:
+  { type: TEXTURE, offset: 0x100C9E0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gPeppyPortraitTalking }
+
+slippy_portrait_idle:
+  { type: TEXTURE, offset: 0x100D900, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gSlippyPortraitIdle },
+
+slippy_portrait_talking:
+  { type: TEXTURE, offset: 0x100E820, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gSlippyPortraitTalking }

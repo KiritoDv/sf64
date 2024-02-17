@@ -147,55 +147,55 @@ void func_800BAAE8(void) {
             D_80178744 = 1;
             /* fallthrough */
         case RCID_FOX:
-            sp44 = D_10050E0;
+            sp44 = gFoxPortraitIdle;
             break;
         case RCID_FOX_RED_OPEN:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_FOX_OPEN:
-            sp44 = D_1006000;
+            sp44 = gFoxPortraitTalking;
             break;
         case RCID_FOX_EXPERT:
-            sp44 = D_1006F20;
+            sp44 = gFoxExpertPortraitIdle;
             break;
         case RCID_FOX_EXPERT_OPEN:
-            sp44 = D_1007E40;
+            sp44 = gFoxExpertPortraitTalking;
             break;
         case RCID_FALCO_RED:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_FALCO:
-            sp44 = D_10032A0;
+            sp44 = gFalcoPortraitIdle;
             break;
         case RCID_FALCO_RED_OPEN:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_FALCO_OPEN:
-            sp44 = D_10041C0;
+            sp44 = gFalcoPortraitTalking;
             break;
         case RCID_SLIPPY_RED:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_SLIPPY:
-            sp44 = D_100D900;
+            sp44 = gSlippyPortraitIdle;
             break;
         case RCID_SLIPPY_RED_OPEN:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_SLIPPY_OPEN:
-            sp44 = D_100E820;
+            sp44 = gSlippyPortraitTalking;
             break;
         case RCID_PEPPY_RED:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_PEPPY:
-            sp44 = D_100BAC0;
+            sp44 = gPeppyPortraitIdle;
             break;
         case RCID_PEPPY_RED_OPEN:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_PEPPY_OPEN:
-            sp44 = D_100C9E0;
+            sp44 = gPeppyPortraitTalking;
             break;
         case RCID_WOLF:
             sp44 = D_F00B580;
@@ -304,14 +304,14 @@ void func_800BAAE8(void) {
             /* fallthrough */
         case RCID_ROB64:
         case RCID_ROB64_2:
-            sp44 = D_1009C80;
+            sp44 = gRob64PortraitIdle;
             break;
         case RCID_ROB64_RED_OPEN:
             D_80178744 = 1;
             /* fallthrough */
         case RCID_ROB64_OPEN:
         case RCID_ROB64_2_OPEN:
-            sp44 = D_100ABA0;
+            sp44 = gRob64PortraitTalking;
             break;
         case RCID_KATT:
             sp44 = D_D003DF0;
@@ -380,7 +380,7 @@ void func_800BAAE8(void) {
                     sp44 = NULL;
                     break;
                 case GSTATE_PLAY:
-                    sp44 = D_1008D60;
+                    sp44 = gStaticPortrait;
                     break;
                 case GSTATE_TITLE:
                 case GSTATE_CREDITS:

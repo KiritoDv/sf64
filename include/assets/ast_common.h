@@ -5,20 +5,20 @@
 #include "sf64object.h"
 #include "structs.h"
 
-extern u16 D_1002040[];
-extern u16 D_10032A0[];
-extern u16 D_10041C0[];
-extern u16 D_10050E0[];
-extern u16 D_1006000[];
-extern u16 D_1006F20[];
-extern u16 D_1007E40[];
-extern u16 D_1008D60[];
-extern u16 D_1009C80[];
-extern u16 D_100ABA0[];
-extern u16 D_100BAC0[];
-extern u16 D_100C9E0[];
-extern u16 D_100D900[];
-extern u16 D_100E820[];
+extern u8 gBossTextHealthBorder[];
+extern u16 gFalcoPortraitIdle[];
+extern u16 gFalcoPortraitTalking[];
+extern u16 gFoxPortraitIdle[];
+extern u16 gFoxPortraitTalking[];
+extern u16 gFoxExpertPortraitIdle[];
+extern u16 gFoxExpertPortraitTalking[];
+extern u16 gStaticPortrait[];
+extern u16 gRob64PortraitIdle[];
+extern u16 gRob64PortraitTalking[];
+extern u16 gPeppyPortraitIdle[];
+extern u16 gPeppyPortraitTalking[];
+extern u16 gSlippyPortraitIdle[];
+extern u16 gSlippyPortraitTalking[];
 extern u8 D_1011A40[];
 extern u16 D_1011AB0[];
 extern u8 D_1011E80[];

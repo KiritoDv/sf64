@@ -45,3 +45,9 @@ slippy_portrait_idle:
 
 slippy_portrait_talking:
   { type: TEXTURE, offset: 0x100E820, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gSlippyPortraitTalking }
+
+boss_text:
+  { type: TEXTURE, offset: 0x1011A40, format: CI4, width: 32, height: 7, ctype: u8, symbol: gBossText }
+
+boss_text_tlut:
+  { type: TEXTURE, offset: 0x1011AB0, format: TLUT, colors: 16, ctype: u16, symbol: gBossTextTLUT }

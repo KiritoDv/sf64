@@ -3140,7 +3140,7 @@ void func_8008DE68(void) {
 
         RCP_SetupDL(&gMasterDisp, 0x4E);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-        TextureRect_4bCI(&gMasterDisp, D_1011A40, D_1011AB0, 32, 7, temp2, temp3, 1.0f, 1.0f);
+        TextureRect_4bCI(&gMasterDisp, gBossText, gBossTextTLUT, 32, 7, temp2, temp3, 1.0f, 1.0f);
 
         RCP_SetupDL(&gMasterDisp, 0x4C);
         TextureRect_8bIA(&gMasterDisp, gBossTextHealthBorder, 40, 12, sp3C, temp1, 1.0f, 1.0f);

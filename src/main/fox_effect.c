@@ -6,17 +6,6 @@ const char D_800D7230[] = "Enm->wrk3=<%d>\n";
 const char D_800D7240[] = "a=<%d>\n";
 const char D_800D7248[] = "a=<%d>\n";
 
-extern Gfx D_1003130[];
-extern Gfx D_1015320[];
-extern Gfx D_10156A0[];
-extern Gfx D_1015810[];
-extern Gfx D_1015B70[];
-extern Gfx D_1015CE0[];
-extern Gfx D_1015E50[];
-extern Gfx D_1015FC0[];
-extern Gfx D_1016130[];
-extern Gfx D_10162A0[];
-extern Gfx D_1016410[];
 extern Gfx D_2000000[];
 extern Gfx D_2001090[];
 extern Gfx D_2002120[];
@@ -127,7 +116,7 @@ void BonusText_Draw(BonusText* bonus) {
                     gSPDisplayList(gMasterDisp++, D_1015980);
                     gSPDisplayList(gMasterDisp++, sSmallBonusDLs[bonus->hits - 1]);
                 } else if (bonus->hits == BONUS_TEXT_1UP) {
-                    gSPDisplayList(gMasterDisp++, D_1011F20);
+                    gSPDisplayList(gMasterDisp++, g1UPSymbolGfx);
                 } else if (bonus->hits == BONUS_TEXT_GREAT) {
                     gSPDisplayList(gMasterDisp++, D_1016580);
                 } else {

@@ -253,7 +253,7 @@ void func_800BD7C4(f32 xPos, f32 yPos, s32 arg2) {
 }
 
 void func_800BD9FC(f32 xPos, f32 yPos) {
-    TextureRect_4bCI(&gMasterDisp, D_1011E80, D_1011EC0, 16, 8, xPos, yPos, 1.0f, 1.0f);
+    TextureRect_4bCI(&gMasterDisp, gColonSymbol, gColonSymbolPalette, 16, 8, xPos, yPos, 1.0f, 1.0f);
 }
 
 void func_800BDA54(f32 xPos, f32 yPos) {

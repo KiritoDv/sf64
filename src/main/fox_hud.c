@@ -67,46 +67,10 @@ s32 D_80161900[20];
 void func_80087788(void);
 
 // Segmented addresses
-
-extern u8 D_1000000[];
-extern u8 D_1000280[];
-extern u8 D_1000640[];
-extern u16 D_1000E80[];
-extern u16 D_1002280[];
-extern u16 D_10030D0[];
-extern s32 D_1011280[];
-extern s32 D_10116A0[];
-extern s32 D_10116B0[];
-extern s32 D_1011730[];
-extern s32 D_1011AC0[];
-extern s32 D_1011B90[];
-extern s32 D_1011BB0[];
-extern s32 D_1011C80[];
-extern s32 D_1011CA0[];
-extern s32 D_1011D70[];
-extern s32 D_1011D90[];
-extern s32 D_1011E60[];
-extern s32 D_1013580[];
-extern s32 D_1013700[];
 extern Gfx D_20031B0[];
 extern Gfx D_2010A30[];
 extern u16 D_3000B20[];
 extern u8 D_30013E0[];
-extern Gfx D_1012110[];
-extern Gfx D_101C2E0[];
-extern Gfx D_1024990[];
-extern Gfx D_101C170[];
-extern Gfx D_101C000[];
-extern Gfx D_101BE90[];
-extern Gfx D_101BD20[];
-extern Gfx D_101BBB0[];
-extern Gfx D_101BA40[];
-extern Gfx D_101B8D0[];
-extern Gfx D_101B760[];
-extern Gfx D_101B5F0[];
-extern Gfx D_101B480[];
-extern Gfx D_101B310[];
-extern Gfx D_101B1A0[];
 extern u16 D_3000120[];
 extern u16 D_5000200[];
 extern u16 D_5000300[];
@@ -217,7 +181,7 @@ void func_80084930(f32 arg0, f32 arg1, s32 arg2) {
     }
 
     TextureRect_4bCI(&gMasterDisp, D_800D1A58[var_t0], D_800D1A64[var_t0], 16, 16, arg0, arg1 - 2.0f, 1.0f, 1.0f);
-    TextureRect_4bCI(&gMasterDisp, D_1011ED0, D_1011F08, 16, 7, arg0 + 16.0f, arg1 + 7.0f, 1.0f, 1.0f);
+    TextureRect_4bCI(&gMasterDisp, gCrossSymbol, gColonSymbolPalette, 16, 7, arg0 + 16.0f, arg1 + 7.0f, 1.0f, 1.0f);
 
     if (arg2 >= 0) {
         arg0 += 11.0f;
@@ -339,7 +303,7 @@ void func_80085740(f32 arg0, f32 arg1, f32 arg2, f32 arg3) {
     if (gVersusMode) {
         TextureRect_8bIA(&gMasterDisp, D_3000B20, 32, 5, arg0, arg1, arg2, arg3);
     } else {
-        TextureRect_8bIA(&gMasterDisp, D_1000E80, 48, 9, arg0, arg1, arg2, arg3);
+        TextureRect_8bIA(&gMasterDisp, gDiffuserBarBorderSP, 48, 9, arg0, arg1, arg2, arg3);
     }
 }
 
@@ -347,7 +311,7 @@ void func_800857DC(f32 arg0, f32 arg1, f32 arg2, f32 arg3) {
     if (gVersusMode) {
         TextureRect_8bCI(&gMasterDisp, D_300D3C0, D_300D408, 24, 3, arg0, arg1, arg2, arg3);
     } else {
-        TextureRect_8bCI(&gMasterDisp, D_10128C0, D_1012988, 40, 5, arg0, arg1, arg2, arg3);
+        TextureRect_8bCI(&gMasterDisp, gDiffuserBarActiveSP, gDiffuserBarPaletteActiveSP, 40, 5, arg0, arg1, arg2, arg3);
     }
 }
 
@@ -355,7 +319,7 @@ void func_80085890(f32 arg0, f32 arg1, f32 arg2, f32 arg3) {
     if (gVersusMode) {
         TextureRect_8bCI(&gMasterDisp, D_300D350, D_300D398, 24, 3, arg0, arg1, arg2, arg3);
     } else {
-        TextureRect_8bCI(&gMasterDisp, D_10127D0, D_1012898, 40, 5, arg0, arg1, arg2, arg3);
+        TextureRect_8bCI(&gMasterDisp, gDiffuserBarIdleSP, gDiffuserBarPaletteIdleSP, 40, 5, arg0, arg1, arg2, arg3);
     }
 }
 
@@ -1025,7 +989,7 @@ void func_80087530(f32 x, f32 y, s32 number) {
     x2 += (2 - i) * 4;
 
     TextureRect_4bCI(&gMasterDisp, D_800D1D00[form], D_800D1D0C[form], 16, 16, x0, y0, 1.0f, 1.0f);
-    TextureRect_4bCI(&gMasterDisp, D_1011ED0, D_1011F08, 16, 7, x1, y1, 1.0f, 1.0f);
+    TextureRect_4bCI(&gMasterDisp, gCrossSymbol, gCrossSymbolPalette, 16, 7, x1, y1, 1.0f, 1.0f);
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
     Graphics_DisplayHUDNumber(x2, y2, number);
@@ -1714,7 +1678,7 @@ void func_80088970(void) {
                     gDPSetPrimColor(gMasterDisp++, 0, 0, 64, 64, 64, 255);
                 }
 
-                TextureRect_8bIA(&gMasterDisp, D_1000000, 64, 10, x0 - 12.0f, y0, 1.0f, 1.0f);
+                TextureRect_8bIA(&gMasterDisp, gContinueText, 64, 10, x0 - 12.0f, y0, 1.0f, 1.0f);
 
                 if (D_80161810[1] == 1) {
                     temp = (D_80161838[0] % 20);
@@ -1733,9 +1697,9 @@ void func_80088970(void) {
                     TextureRect_8bIA(&gMasterDisp, D_6000000, 96, 12, x1, y1, 1.0f, 1.0f);
                 } else {
                     if (gLifeCount[gPlayerNum]) {
-                        TextureRect_8bIA(&gMasterDisp, D_1000280, 96, 10, x1, y1, 1.0f, 1.0f);
+                        TextureRect_8bIA(&gMasterDisp, gRetryCourseText, 96, 10, x1, y1, 1.0f, 1.0f);
                     } else {
-                        TextureRect_8bIA(&gMasterDisp, D_1000640, 96, 22, x1, y1, 1.0f, 1.0f);
+                        TextureRect_8bIA(&gMasterDisp, gGameOverText, 96, 22, x1, y1, 1.0f, 1.0f);
                     }
                 }
 
@@ -3098,7 +3062,7 @@ void func_8008DC34(void) {
 void func_8008DCB0(f32 arg0, f32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     RCP_SetupDL_78();
     gDPSetPrimColor(gMasterDisp++, 0, 0, arg2, arg3, arg4, D_80161708);
-    TextureRect_4bCI(&gMasterDisp, D_1011ED0, D_1011F08, 16, 7, arg0, arg1, 1.0f, 1.0f);
+    TextureRect_4bCI(&gMasterDisp, gCrossSymbol, gColonSymbolPalette, 16, 7, arg0, arg1, 1.0f, 1.0f);
 }
 
 void func_8008DD78(f32 arg0, f32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
@@ -3140,7 +3104,7 @@ void func_8008DE68(void) {
 
         RCP_SetupDL(&gMasterDisp, 0x4E);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-        TextureRect_4bCI(&gMasterDisp, gBossText, gBossTextTLUT, 32, 7, temp2, temp3, 1.0f, 1.0f);
+        TextureRect_4bCI(&gMasterDisp, gBossTextHealth, gBossTextHealthPalette, 32, 7, temp2, temp3, 1.0f, 1.0f);
 
         RCP_SetupDL(&gMasterDisp, 0x4C);
         TextureRect_8bIA(&gMasterDisp, gBossTextHealthBorder, 40, 12, sp3C, temp1, 1.0f, 1.0f);
@@ -3152,7 +3116,7 @@ void func_8008DE68(void) {
         if ((D_801616C4 >= 0.1f) && (sp3C >= 25.0f)) {
             RCP_SetupDL(&gMasterDisp, 0x4E);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-            TextureRect_8bCI(&gMasterDisp, D_10129C0, D_1013090, 16, 109, temp4, temp5, 1.0f, D_801616C4);
+            TextureRect_8bCI(&gMasterDisp, gBossHealthBar, gBossHealthBarPalette, 16, 109, temp4, temp5, 1.0f, D_801616C4);
         }
 
         RCP_SetupDL(&gMasterDisp, 0x4C);
@@ -3206,7 +3170,7 @@ void func_8008E2C8(f32 arg0, f32 arg1, s32* arg2, f32 arg3) {
         if (i & 1) {
             RCP_SetupDL_78();
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-            TextureRect_4bCI(&gMasterDisp, D_1011E80, D_1011EC0, 0x10, 8, (var_fs0 * arg3) + arg0, arg1, arg3, arg3);
+            TextureRect_4bCI(&gMasterDisp, gColonSymbol, gColonSymbolPalette, 16, 8, (var_fs0 * arg3) + arg0, arg1, arg3, arg3);
         } else {
             RCP_SetupDL_76();
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);

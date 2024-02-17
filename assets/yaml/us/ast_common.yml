@@ -4,50 +4,101 @@
   header:
     - '#include "assets/ast_common.h"'
 
-health_bar_boss_text:
+continue_text:
+  { type: TEXTURE, offset: 0x1000000, format: IA8, width: 64, height: 10, ctype: u8, symbol: gContinueText }
+
+retry_course_text:
+  { type: TEXTURE, offset: 0x1000280, format: IA8, width: 96, height: 10, ctype: u8, symbol: gRetryCourseText }
+
+gameover_text:
+  { type: TEXTURE, offset: 0x1000640, format: IA8, width: 96, height: 22, ctype: u8, symbol: gGameOverText }
+
+diffuser_bar_border_sp:
+  { type: TEXTURE, offset: 0x1000E80, format: IA8, width: 48, height: 9, ctype: u8, symbol: gDiffuserBarBorderSP }
+
+health_bar_boss_text_border:
   { type: TEXTURE, offset: 0x1002040, format: IA8, width: 40, height: 12, ctype: u8, symbol: gBossTextHealthBorder }
 
 falco_portrait_idle:
-  { type: TEXTURE, offset: 0x10032A0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFalcoPortraitIdle },
+  { type: TEXTURE, offset: 0x10032A0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFalcoPortraitIdle }
 
 falco_portrait_talking:
   { type: TEXTURE, offset: 0x10041C0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFalcoPortraitTalking }
 
 fox_portrait_idle:
-  { type: TEXTURE, offset: 0x10050E0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxPortraitIdle },
+  { type: TEXTURE, offset: 0x10050E0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxPortraitIdle }
 
 fox_talking_idle:
-  { type: TEXTURE, offset: 0x1006000, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxPortraitTalking },
+  { type: TEXTURE, offset: 0x1006000, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxPortraitTalking }
 
 fox_expert_portrait_idle:
-  { type: TEXTURE, offset: 0x1006F20, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxExpertPortraitIdle },
+  { type: TEXTURE, offset: 0x1006F20, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxExpertPortraitIdle }
 
 fox_expert_portrait_talking:
   { type: TEXTURE, offset: 0x1007E40, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gFoxExpertPortraitTalking }
 
 static_portrait:
-  { type: TEXTURE, offset: 0x1008D60, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gStaticPortrait },
+  { type: TEXTURE, offset: 0x1008D60, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gStaticPortrait }
 
 rob64_portrait_idle:
-  { type: TEXTURE, offset: 0x1009C80, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gRob64PortraitIdle },
+  { type: TEXTURE, offset: 0x1009C80, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gRob64PortraitIdle }
 
 rob64_portrait_talking:
   { type: TEXTURE, offset: 0x100ABA0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gRob64PortraitTalking }
 
 peppy_portrait_idle:
-  { type: TEXTURE, offset: 0x100BAC0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gPeppyPortraitIdle },
+  { type: TEXTURE, offset: 0x100BAC0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gPeppyPortraitIdle }
 
 peppy_portrait_talking:
   { type: TEXTURE, offset: 0x100C9E0, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gPeppyPortraitTalking }
 
 slippy_portrait_idle:
-  { type: TEXTURE, offset: 0x100D900, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gSlippyPortraitIdle },
+  { type: TEXTURE, offset: 0x100D900, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gSlippyPortraitIdle }
 
 slippy_portrait_talking:
   { type: TEXTURE, offset: 0x100E820, format: RGBA16, width: 44, height: 44, ctype: u16, symbol: gSlippyPortraitTalking }
 
-boss_text:
-  { type: TEXTURE, offset: 0x1011A40, format: CI4, width: 32, height: 7, ctype: u8, symbol: gBossText }
+health_bar_boss_text:
+  { type: TEXTURE, offset: 0x1011A40, format: CI4, width: 32, height: 7, ctype: u8, tlut: 0x1011AB0, symbol: gBossTextHealth }
 
-boss_text_tlut:
-  { type: TEXTURE, offset: 0x1011AB0, format: TLUT, colors: 16, ctype: u16, symbol: gBossTextTLUT }
+health_bar_boss_text_palette:
+  { type: TEXTURE, offset: 0x1011AB0, format: TLUT, colors: 16, ctype: u16, symbol: gBossTextHealthPalette }
+
+colon_symbol:
+  { type: TEXTURE, offset: 0x1011E80, format: CI4, width: 16, height: 8, ctype: u8, tlut: 0x1011B30, symbol: gColonSymbol }
+
+colon_symbol_palette:
+  { type: TEXTURE, offset: 0x1011B30, format: TLUT, colors: 16, ctype: u16, symbol: gColonSymbolPalette }
+
+cross_symbol:
+  { type: TEXTURE, offset: 0x1011ED0, format: CI4, width: 16, height: 8, ctype: u8, tlut: 0x1011F08, symbol: gCrossSymbol }
+
+cross_symbol_palette:
+  { type: TEXTURE, offset: 0x1011F08, format: TLUT, colors: 16, ctype: u16, symbol: gCrossSymbolPalette }
+
+1up_symbol_texture:
+  { type: TEXTURE, offset: 0x1012000, format: CI4, width: 32, height: 16, ctype: u8, tlut: 0x1012100, symbol: g1UPSymbolTexture }
+
+1up_symbol_palette:
+  { type: TEXTURE, offset: 0x1012100, format: TLUT, colors: 16, ctype: u16, symbol: g1UPSymbolPalette }
+
+1up_symbol_gfx:
+  { type: GFX, offset: 0x1011F20, symbol: g1UPSymbolGfx }
+
+diffuser_bar_idle_sp:
+  { type: TEXTURE, offset: 0x10127D0, format: CI8, width: 40, height: 5, ctype: u8, tlut: 0x1012898, symbol: gDiffuserBarIdleSP }
+
+diffuser_bar_idle_palette_sp:
+  { type: TEXTURE, offset: 0x1012898, format: TLUT, colors: 16, ctype: u16, symbol: gDiffuserBarPaletteIdleSP }
+
+diffuser_bar_active_sp:
+  { type: TEXTURE, offset: 0x10128C0, format: CI8, width: 40, height: 5, ctype: u8, tlut: 0x1012988, symbol: gDiffuserBarActiveSP }
+
+diffuser_bar_active_palette_sp:
+  { type: TEXTURE, offset: 0x1012988, format: TLUT, colors: 16, ctype: u16, symbol: gDiffuserBarPaletteActiveSP }
+
+health_bar_boss_bar:
+  { type: TEXTURE, offset: 0x10129C0, format: CI8, width: 16, height: 109, ctype: u8, tlut: 0x1013090, symbol: gBossHealthBar }
+
+health_bar_boss_bar_palette:
+  { type: TEXTURE, offset: 0x1013090, format: TLUT, colors: 16, ctype: u16, symbol: gBossHealthBarPalette }

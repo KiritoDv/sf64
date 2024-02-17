@@ -6,7 +6,6 @@
 
 #include "global.h"
 
-extern Gfx D_1024AC0[];
 extern Gfx D_60320E0[];
 extern Gfx D_7010970[];
 

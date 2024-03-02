@@ -536,6 +536,13 @@ void Option_Setup(void) {
     D_menu_801B9244 = 0;
     D_menu_801B9248 = 0;
     func_8001D444(0, 36, 0, 255);
+    for (i = 0; i < ARRAY_COUNT(gSaveFile.save.data.planet); i++) {
+        gSaveFile.save.data.planet[i].played = 1;
+        gSaveFile.save.data.planet[i].expertMedal = 1;
+        gSaveFile.save.data.planet[i].expertClear = 1;
+        gSaveFile.save.data.planet[i].normalMedal = 1;
+        gSaveFile.save.data.planet[i].normalClear = 1;
+    }
 }
 
 void Option_Init(void) {

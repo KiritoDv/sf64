@@ -118,7 +118,7 @@ void func_ending_80187520(s32 arg0) {
             break;
 
         case 1:
-            for (j = 0, i = 0; i < 60; j += 316 * 4, i++) {
+            for (j = 0, i = 0; i < 120; j += 640 * 4, i++) {
                 TextureRect_16bRGBA(&gMasterDisp, gEndingAwardFront + j, 316, 4, 0.0f, 4 * i, 1.0f, 1.0f);
             }
             break;

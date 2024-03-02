@@ -200,8 +200,8 @@ u16* D_menu_801AF428[15][2] = {
     { gMsg_ID_1360, gMsg_ID_1370 }, { gMsg_ID_1340, gMsg_ID_1350 },
     { gMsg_ID_1400, gMsg_ID_1410 }, { gMsg_ID_1200, gMsg_ID_1210 },
     { gMsg_ID_1240, gMsg_ID_1250 }, { gMsg_ID_1380, gMsg_ID_1390 },
-    { gMsg_ID_1280, gMsg_ID_1290 }, { NULL, NULL },
-    { gMsg_ID_1460, gMsg_ID_1470 },
+    { gMsg_ID_1280, gMsg_ID_1290 }, { gMsg_ID_1460, gMsg_ID_1470 },
+    { NULL, NULL },
 };
 
 Planet sPlanets[PLANET_MAX] = {

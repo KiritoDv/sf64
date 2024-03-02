@@ -3,8 +3,8 @@
 
 #include "alignment.h"
 
-#define SCREEN_WIDTH  320
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH  640
+#define SCREEN_HEIGHT 480
 
 #define RAND_FLOAT(max) (Rand_ZeroOne()*(max))
 #define RAND_INT(max) ((s32)(Rand_ZeroOne()*(max)))

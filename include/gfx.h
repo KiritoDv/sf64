@@ -4,8 +4,8 @@
 #include "libultra/ultra64.h"
 #include "sf64math.h"
 
-#define SCREEN_WIDTH  320
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH  640
+#define SCREEN_HEIGHT 480
 
 #define FILL_COLOR(rgba) (((rgba) << 0x10) | (rgba))
 #define RGBA16_RED(color16) (((color16) >> 0xB) & 0x1F)
@@ -66,12 +66,12 @@ void Graphics_NMIWipe(void);
 
 void Lights_SetOneLight(Gfx** dList, s32 dirX, s32 dirY, s32 dirZ, s32 colR, s32 colG, s32 colB, s32 ambR, s32 ambG, s32 ambB);
 void Lights_SetTwoLights(Gfx** dList, s32 dir1x, s32 dir1y, s32 dir1z, s32 dir2x, s32 dir2y, s32 dir2z, s32 col1r, s32 col1g,
-                   s32 col1b, s32 col2r, s32 col2g, s32 col2b, s32 ambR, s32 ambG, s32 ambB);  
+                   s32 col1b, s32 col2r, s32 col2g, s32 col2b, s32 ambR, s32 ambG, s32 ambB);
 
 char* Graphics_ClearPrintBuffer(char *buf, s32 fill, s32 len);
 s32 Graphics_Printf(const char *fmt, ...);
 void Texture_Scroll(void *texture, s32 width, s32 height, u8 mode);
-void Texture_Mottle(void *dst, void *src, u8 mode);    
+void Texture_Mottle(void *dst, void *src, u8 mode);
 s32 Animation_GetLimbIndex(Limb* limb, Limb** skeleton);
 void Animation_DrawLimb(s32 mode, Limb* limb, Limb* *skeleton, Vec3f* jointTable, OverrideLimbDraw overrideLimbDraw, PostLimbDraw postLimbDraw, void* data);
 void Animation_DrawSkeleton(s32 mode, Limb** skeletonSegment, Vec3f* jointTable, OverrideLimbDraw overrideLimbDraw, PostLimbDraw postLimbDraw, void* data, Matrix* transform);

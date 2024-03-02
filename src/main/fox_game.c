@@ -503,6 +503,9 @@ void Game_Update(void) {
         }
         spBB = 0;
         if (gCamCount == 1) {
+            // Matrix_Push(&gGfxMatrix);
+            // Matrix_Pop(&gGfxMatrix);
+            // Matrix_Scale(&gGfxMatrix, 2.0f, 2.0f, 2.0f, 1);
             Graphics_FillRectangle(&gMasterDisp, 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, D_80178390[0],
                                    D_801783A0[0], D_801783B0[0], D_80178380[0]);
             if ((gDrawMode == DRAWMODE_4) || (gDrawMode == DRAWMODE_8)) {

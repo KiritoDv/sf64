@@ -1,0 +1,2 @@
+audio_table_blob:
+  { type: BLOB, offset: 0x137730, size: 0x73C580, ctype: unsigned char, symbol: gAudioTable }

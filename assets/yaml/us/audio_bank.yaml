@@ -1,0 +1,7 @@
+:config:
+  header:
+    code:
+      - '#include "PR/ultratypes.h"'
+
+audio_seq_blob:
+  { type: BLOB, offset: 0x119710, size: 0x1E020, symbol: gAudioBank }

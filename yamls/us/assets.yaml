@@ -1,13 +1,23 @@
   - name: audio_seq
+    exclusive_ram_id: audio
     type: bin
+    vram: 0x80000000
     start: 0xDEA20
 
   - name: audio_bank
-    type: bin
+    exclusive_ram_id: audio
+    type: code
+    dir: assets
+    vram: 0x80000000
     start: 0x119710
+    follows_vram: main
+    subsegments:
+      - [0x137730, .data, audio_bank/audio_bank]
 
   - name: audio_table
+    exclusive_ram_id: audio
     type: bin
+    vram: 0x80000000
     start: 0x137730
 
   - name: ast_common

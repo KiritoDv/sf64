@@ -197,11 +197,11 @@ u8 gDefaultShortNoteVelocityTable[] = {
 u8 gDefaultShortNoteGateTimeTable[] = {
     229, 203, 177, 151, 139, 126, 113, 100, 87, 74, 61, 48, 36, 23, 10, 0,
 };
+
 EnvelopePoint gDefaultEnvelope[] = {
-    { 4, 32000 },
-    { 1000, 32000 },
-    { ADSR_HANG, 0 },
-    { ADSR_DISABLE, 0 },
+    { BSWAP16(4), BSWAP16(32000) },    // go from 0 to 32000 over the course of 16ms
+    { BSWAP16(1000), BSWAP16(32000) }, // stay there for 4.16 seconds
+    { BSWAP16(ADSR_HANG), 0 }          // then continue staying there
 };
 
 NoteSubEu gZeroNoteSub = { 0 };

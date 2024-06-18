@@ -199,7 +199,7 @@ f32 func_80013B90(AdsrState* adsr) {
             adsr->state = 3;
         case_3:
         case 3:
-            adsr->delay = adsr->envelope[adsr->envIndex].delay;
+            adsr->delay = BSWAP16(adsr->envelope[adsr->envIndex].delay);
             switch (adsr->delay) {
                 case 0:
                     adsr->state = 0;
@@ -208,7 +208,7 @@ f32 func_80013B90(AdsrState* adsr) {
                     adsr->state = 5;
                     break;
                 case -2:
-                    adsr->envIndex = adsr->envelope[adsr->envIndex].arg;
+                    adsr->envIndex = BSWAP16(adsr->envelope[adsr->envIndex].arg);
                     goto case_3;
                 case -3:
                     adsr->state = 1;
@@ -221,7 +221,7 @@ f32 func_80013B90(AdsrState* adsr) {
                         adsr->delay = 1;
                     }
 
-                    adsr->target = adsr->envelope[adsr->envIndex].arg / 32767.0f;
+                    adsr->target = (f32) BSWAP32(adsr->envelope[adsr->envIndex].arg) / 32767.0f;
                     adsr->target = SQ(adsr->target);
                     adsr->velocity = (adsr->target - adsr->current) / adsr->delay;
                     adsr->state = 4;

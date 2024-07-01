@@ -1,5 +1,7 @@
 #include "sf64math.h"
 #include "prevent_bss_reordering.h"
+#include "mods.h"
+
 typedef struct {
     /* 0x00 */ u8* unk_00;
     /* 0x04 */ s32 width;
@@ -312,7 +314,7 @@ void func_hud_80085944(void) {
     f32 y;
     s32 temp;
 
-    D_801618B0[6] += 0.7f;
+    D_801618B0[6] += 0.7f / FRAME_FACTOR; // 60fps HUD fixes Gold Ring and Life Bar
     if (D_801618B0[6] >= 12.0f) {
         D_801618B0[6] = 0.0f;
     }
@@ -1319,7 +1321,7 @@ void HUD_DrawStatusScreens(void) {
     HUD_DrawLevelClearScreen();
     HUD_DrawLevelClearStatusScreen();
 }
-
+#if !DPAD_CONTROL ==1
 s32 func_hud_800886B8(void) {
     s32 var_v1 = 0;
     f32 var_fv1 = gInputPress->stick_y; // related to the vertical height of the arwing
@@ -1348,6 +1350,51 @@ s32 func_hud_800886B8(void) {
     }
     return var_v1;
 }
+#endif 
+
+#if DPAD_CONTROL == 1
+s32 func_hud_800886B8(void) {
+    s32 var_v1 = 0;
+    f32 y = gInputPress->stick_y;
+
+    if ((y != 0.0f) && (D_80161810[4] != 0)) {
+        return 0;
+    }
+
+    D_80161810[4] = 0;
+
+    if (fabsf(y) < 30.0f) {
+        y = 0.0f;
+    }
+
+    if (y != 0.0f) {
+        if (D_80161810[2] == 0) {
+            if (y > 0) {
+                var_v1 = 1;
+            } else {
+                var_v1 = -1;
+            }
+            D_80161810[2] = 1;
+        } else {
+            D_80161810[2] = 0;
+        }
+    } else {
+        if ((gControllerPress[0].button & D_JPAD) || (gControllerPress[0].button & U_JPAD)) {
+            if (D_80161810[2] == 0) {
+                if (gControllerPress[0].button & U_JPAD) {
+                    var_v1 = 1;
+                } else {
+                    var_v1 = -1;
+                }
+                D_80161810[2] = 1;
+            }
+        } else {
+            D_80161810[2] = 0;
+        }
+    }
+    return var_v1;
+}
+#endif
 
 void func_hud_80088784(s32 arg0) {
     Gfx* D_800D1D4C[] = {
@@ -1909,7 +1956,7 @@ void RadarMark_Draw(s32 arg0) {
     }
 }
 
-void func_hud_8008A07C(f32 x, f32 y) {
+void func_hud_8008A07C(f32 x, f32 y) { // HUD Radar Box
     f32 D_800D1E94[] = { 20.0f, 180.0f, 20.0f, 180.0f };
     f32 D_800D1EA4[] = { 72.0f, 72.0f, 192.0f, 192.0f };
     f32 xPos;
@@ -1918,16 +1965,21 @@ void func_hud_8008A07C(f32 x, f32 y) {
     f32 yScale;
     f32 xScale1;
     f32 yScale1;
+    #if MODS_WIDESCREEN == 1
+#define ASPECT 1.333f
+#else
+#define ASPECT 1.0f
+#endif
 
     if (gCamCount != 1) {
-        xPos = D_800D1E94[gPlayerNum];
+        xPos = D_800D1E94[gPlayerNum] / ASPECT;
         yPos = D_800D1EA4[gPlayerNum];
         xScale = 1.21f;
         yScale = 1.69f;
         xScale1 = 0.70f;
         yScale1 = 0.70f;
     } else {
-        xPos = x - 32.0f;
+        xPos = x - 32.0f / ASPECT;
         yPos = y - 14.0f;
         xScale = 2.98f;
         yScale = 4.24f;
@@ -1936,11 +1988,11 @@ void func_hud_8008A07C(f32 x, f32 y) {
     }
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_78);
-    gDPSetPrimColor(gMasterDisp++, 0, 0, 60, 60, 255, 170);
-    func_hud_800853A4(xPos + 1.0f, yPos + 1.0f, xScale, yScale);
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 60, 60, 255, 170); // theboy181 Radar Blue Rectangle
+    func_hud_800853A4(xPos + 1.0f, yPos + 1.0f, xScale / ASPECT, yScale);
 
-    gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-    func_hud_80085404(xPos, yPos, xScale1, yScale1);
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255); // theboy181 Radar Outline
+    func_hud_80085404(xPos, yPos, xScale1 / ASPECT, yScale1);
 }
 
 void func_hud_8008A240(void) {
@@ -1992,7 +2044,7 @@ void func_hud_8008A240(void) {
     }
 }
 
-s32 func_hud_8008A4DC(void) {
+s32 func_hud_8008A4DC(void) { // theboy181 Radar Marks
     s32 i;
     f32 scale;
     f32 x1;
@@ -2004,6 +2056,12 @@ s32 func_hud_8008A4DC(void) {
     f32 temp;
     f32 temp2;
     f32 temp3;
+
+#if MODS_WIDESCREEN == 1
+#define ASPECT 1.333f
+#else
+#define ASPECT 1.0f
+#endif
 
     if (!gVersusMode) {
         if (gLevelMode != LEVELMODE_ALL_RANGE) {
@@ -2028,7 +2086,7 @@ s32 func_hud_8008A4DC(void) {
             case LEVEL_SECTOR_Z:
                 temp2 = 20000.0f;
                 y1 = -360.0f;
-                x1 = 542.0f;
+                x1 = 542.0f * ASPECT;
                 z1 = -1584.0f;
                 temp3 = 7.5f;
                 scale = 0.02f;
@@ -2037,7 +2095,7 @@ s32 func_hud_8008A4DC(void) {
             case LEVEL_CORNERIA:
                 temp2 = 8000.0f;
                 y1 = -142.0f;
-                x1 = 214.0f;
+                x1 = 214.0f * ASPECT;
                 z1 = -626.0f;
                 temp3 = 3.0f;
                 scale = 0.008f;
@@ -2046,7 +2104,7 @@ s32 func_hud_8008A4DC(void) {
             case LEVEL_BOLSE:
                 temp2 = 10000.0f;
                 y1 = -178.0f;
-                x1 = 268.0f;
+                x1 = 268.0f * ASPECT;
                 z1 = -784.0f;
                 temp3 = 3.7f;
                 scale = 0.01f;
@@ -2055,7 +2113,7 @@ s32 func_hud_8008A4DC(void) {
             default:
                 temp2 = 12500.0f;
                 y1 = -220.0f;
-                x1 = 330.0f;
+                x1 = 330.0f * ASPECT;
                 z1 = -970.0f;
                 temp3 = 4.7f;
                 scale = 0.013f;
@@ -2064,7 +2122,7 @@ s32 func_hud_8008A4DC(void) {
 
         x = 254.000f + D_800D1E10;
         y = 162.000f;
-        x1 += D_800D1E10 * temp3;
+        x1 += D_800D1E10 * temp3 * ASPECT;
     } else {
         if (!gVsMatchStart || (D_versus_80178750 != 0)) {
             return 0;
@@ -2073,7 +2131,7 @@ s32 func_hud_8008A4DC(void) {
 
         scale = 0.03f;
         z1 = -885.00f;
-        x1 = -274.00f;
+        x1 = -274.00f * ASPECT;
         y1 = -166.00f;
     }
 
@@ -2353,7 +2411,8 @@ void func_hud_8008B2F0(void) {
                 }
             }
 
-            if (((D_801617B0 != 0) || ((D_801617A4 - D_801617A8) > 0.1f)) && (gGameFrameCount & 2)) {
+            if (((D_801617B0 != 0) || ((D_801617A4 - D_801617A8) > 0.1f)) &&
+                (gGameFrameCount & 2 * 2)) { // 60fps flashing when bar increases.
                 D_800D1EB4 = 0;
                 D_800D1EB8 = 255;
                 D_800D1EBC = 0;
@@ -2365,7 +2424,8 @@ void func_hud_8008B2F0(void) {
                 D_801617A4 = 1.0f;
             }
 
-            Math_SmoothStepToF(&D_801617A8, D_801617A4, 0.02f, 1000.0f, 0.001f);
+            Math_SmoothStepToF(&D_801617A8, D_801617A4, (0.02f / 2), (1000.0f / 2),
+                               (0.001f / 2)); // 60fps   need testing with side by side.
 
             var_fv0 = gPlayer[0].shields;
             if (var_fv0 > (256.0f * D_801617A8) - 1.0f) {
@@ -2376,7 +2436,7 @@ void func_hud_8008B2F0(void) {
     }
 }
 
-void func_hud_8008B5B0(f32 x, f32 y) {
+void func_hud_8008B5B0(f32 x, f32 y) { // Shield Bar (player life)
     RCP_SetupDL(&gMasterDisp, SETUPDL_75);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
     func_hud_800856C0(x + 8.0f, y + 2.0f, D_801617A8, 1.0f, D_801617AC);
@@ -2387,10 +2447,11 @@ void func_hud_8008B5B0(f32 x, f32 y) {
     func_hud_8008566C(x + 7.0f, y, D_801617A8 * 6.0f, 1.0f);
 }
 
-void func_hud_8008B734(void) {
-    func_hud_8008B2F0();
-    func_hud_8008B5B0(20.0f, 18.0f);
-    func_hud_80085944();
+void func_hud_8008B734(void) { // 2d hud elements timing can be adjusted here.
+
+    func_hud_8008B2F0();             // Player Life Bar
+    func_hud_8008B5B0(20.0f, 18.0f); // Draws the sheild
+    func_hud_80085944();             // 2D Rings
 }
 
 s32 func_hud_8008B774(void) {
@@ -3534,7 +3595,7 @@ void HUD_Draw(void) {
     s32 i;
     s32 goldRings;
     bool medalStatus;
-
+    // return; //theboy181 Disable HUD
     if (D_hud_80161730 == 0) {
         for (i = 0; i < 10; i++) {
             D_801617E8[i] = 0;
@@ -5212,7 +5273,7 @@ void HUD_AquasStart(Player* player) {
             D_ctx_80177A48[0] = 0.1f;
 
             player->rot.y = 0.0f;
-            player->baseSpeed = 20.0f;
+            player->baseSpeed = 20.0f; // 60fps true aquas speed
             player->draw = true;
             player->csState = 6;
 

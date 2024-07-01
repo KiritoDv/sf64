@@ -18,6 +18,7 @@
 #include "assets/ast_title.h"
 #include "assets/ast_katina.h"
 #include "assets/ast_allies.h"
+#include "mods.h"
 
 void func_demo_80048AC0(TeamId teamId) {
     s32 teamShield;
@@ -1382,21 +1383,21 @@ void Cutscene_LevelComplete(Player* player) {
     }
 }
 
-void Cutscene_UTurn(Player* player) {
+void Cutscene_UTurn(Player* player) { // 60fps UTURN
     Vec3f sp58;
     PosRot sp50;
 
-    Math_SmoothStepToF(&player->zRotBarrelRoll, 0.0f, 0.1f, 15.0f, 0.0f);
-    Math_SmoothStepToF(&player->rot.z, 0.0f, 0.1f, 5.0f, 0.0f);
-    Math_SmoothStepToF(&player->rot.y, 0.0f, 0.1f, 5.0f, 0.0f);
-    Math_SmoothStepToF(&player->rot.x, 0.0f, 0.1f, 5.0f, 0.0f);
-    Math_SmoothStepToF(&player->cam.eye.y, player->pos.y - 20.0f, 0.2f, 100.0f, 0.0f);
+    Math_SmoothStepToF(&player->zRotBarrelRoll, 0.0f, (0.1f / FRAME_FACTOR), (15.0f / FRAME_FACTOR), 0.0f); // 60fps
+    Math_SmoothStepToF(&player->rot.z, 0.0f, (0.1f / FRAME_FACTOR), (5.0f / FRAME_FACTOR), 0.0f);
+    Math_SmoothStepToF(&player->rot.y, 0.0f, (0.1f / FRAME_FACTOR), (5.0f / FRAME_FACTOR), 0.0f);
+    Math_SmoothStepToF(&player->rot.x, 0.0f, (0.1f / FRAME_FACTOR), (5.0f / FRAME_FACTOR), 0.0f);
+    Math_SmoothStepToF(&player->cam.eye.y, player->pos.y - 20.0f, (0.2f / FRAME_FACTOR), (100.0f / FRAME_FACTOR), 0.0f);
 
     sp50.rot.z = player->baseSpeed;
     sp58.x = Math_RadToDeg(Math_Atan2F(player->pos.x, player->trueZpos));
 
     player->boostCooldown = 1;
-    player->boostMeter += 1.0f;
+    player->boostMeter += 1.0f / FRAME_FACTOR; // 60fps
 
     if (player->boostMeter > 90.0f) {
         player->boostMeter = 90.0f;
@@ -1405,9 +1406,9 @@ void Cutscene_UTurn(Player* player) {
     switch (player->csState) {
         case 0:
             if (player->unk_19C != 0) {
-                player->csTimer = 10;
+                player->csTimer = 10 * FRAME_FACTOR; // 60fps
             } else {
-                player->csTimer = 30;
+                player->csTimer = 30 * FRAME_FACTOR; // 60fps
             }
             player->csState = 1;
             if (player->aerobaticPitch > 180.0f) {
@@ -1419,14 +1420,14 @@ void Cutscene_UTurn(Player* player) {
             if (player->csTimer == 0) {
                 player->csState = 2;
                 if (player->unk_19C != 0) {
-                    player->csTimer = 60;
+                    player->csTimer = 60 * FRAME_FACTOR; // 60fps  Arwin will drop ???
                 } else {
-                    player->csTimer = 80;
+                    player->csTimer = 80 * FRAME_FACTOR; // 60fps DO NOT
                 }
             }
-            player->cam.eye.x += player->vel.x * 0.2f;
-            player->cam.eye.z += player->vel.z * 0.2f;
-            Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.1f, 15.0f, 0.0f);
+            player->cam.eye.x += player->vel.x * 0.2f / FRAME_FACTOR;                                         // 60fps
+            player->cam.eye.z += player->vel.z * 0.2f / FRAME_FACTOR;                                         // 60fps
+            Math_SmoothStepToF(&player->zRotBank, 0.0f, (0.1f / FRAME_FACTOR), (15.0f / FRAME_FACTOR), 0.0f); // 60fps
             break;
 
         case 2:
@@ -1436,12 +1437,14 @@ void Cutscene_UTurn(Player* player) {
                 sp58.y = 60.0f;
             }
 
-            Math_SmoothStepToF(&player->wings.unk_04, sp58.y, 0.3f, 100.0f, 0.0f);
-            Math_SmoothStepToF(&player->wings.unk_08, sp58.y, 0.3f, 100.0f, 0.0f);
-            Math_SmoothStepToF(&player->wings.unk_0C, sp58.y, 0.3f, 100.0f, 0.0f);
-            Math_SmoothStepToF(&player->wings.unk_10, sp58.y, 0.3f, 100.0f, 0.0f);
-            Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.1f, 15.0f, 0.0f);
-            Math_SmoothStepToF(&player->aerobaticPitch, 190.0f, 0.1f, 6.0f, 0.001f);
+            Math_SmoothStepToF(&player->wings.unk_04, sp58.y, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR,
+                               0.0f); // 60fps
+            Math_SmoothStepToF(&player->wings.unk_08, sp58.y, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR, 0.0f);
+            Math_SmoothStepToF(&player->wings.unk_0C, sp58.y, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR, 0.0f);
+            Math_SmoothStepToF(&player->wings.unk_10, sp58.y, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR, 0.0f);
+            Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.1f / FRAME_FACTOR, 15.0f / FRAME_FACTOR, 0.0f);
+            Math_SmoothStepToF(&player->aerobaticPitch, 190.0f, 0.1f / FRAME_FACTOR, 6.0f / FRAME_FACTOR,
+                               0.001f / FRAME_FACTOR);
 
             if (player->aerobaticPitch > 180.0f) {
                 player->yRot_114 += 180.0f;
@@ -1459,41 +1462,47 @@ void Cutscene_UTurn(Player* player) {
                 player->unk_194 = 7.0f;
                 player->unk_190 = 7.0f;
             }
-            player->unk_004 -= 0.2f;
+            player->unk_004 -= 0.2f / FRAME_FACTOR; // 60fps
             break;
 
         case 3:
-            Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.05f, 5.0f, 0.0f);
+            Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.05f / FRAME_FACTOR, 5.0f / FRAME_FACTOR,
+                               0.0f); // 60fps adjustment
 
             sp58.y = player->zRotBank * 0.3f;
 
-            Math_SmoothStepToF(&player->wings.unk_04, sp58.y, 0.3f, 100.0f, 0.0f);
-            Math_SmoothStepToF(&player->wings.unk_08, sp58.y, 0.3f, 100.0f, 0.0f);
+            Math_SmoothStepToF(&player->wings.unk_04, sp58.y, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR,
+                               0.0f); // 60fps
+            Math_SmoothStepToF(&player->wings.unk_08, sp58.y, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR,
+                               0.0f); // 60fps
 
             sp58.z = -sp58.y;
 
-            Math_SmoothStepToF(&player->wings.unk_0C, sp58.z, 0.3f, 100.0f, 0.0f);
-            Math_SmoothStepToF(&player->wings.unk_10, sp58.z, 0.3f, 100.0f, 0.0f);
+            Math_SmoothStepToF(&player->wings.unk_0C, sp58.z, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR,
+                               0.0f); // 60fps
+            Math_SmoothStepToF(&player->wings.unk_10, sp58.z, 0.3f / FRAME_FACTOR, 100.0f / FRAME_FACTOR,
+                               0.0f); // 60fps
 
             player->unk_190 = 2.0f;
-            player->cam.eye.x += player->vel.x * 0.1f;
-            player->cam.eye.z += player->vel.z * 0.1f;
+            player->cam.eye.x += player->vel.x * 0.1f / FRAME_FACTOR; // 60fps adjustment
+            player->cam.eye.z += player->vel.z * 0.1f / FRAME_FACTOR; // 60fps adjustment
 
             if (player->unk_19C != 0) {
-                player->cam.eye.x += player->vel.z * 0.2f;
-                player->cam.eye.z += player->vel.x * 0.2f;
+                player->cam.eye.x += player->vel.z * 0.2f / FRAME_FACTOR; // 60fps adjustment
+                player->cam.eye.z += player->vel.x * 0.2f / FRAME_FACTOR; // 60fps adjustment
             }
 
             if (player->unk_19C == 0) {
-                Math_SmoothStepToAngle(&player->yRot_114, sp58.x, 0.1f, 2.0f, 0.0f);
+                Math_SmoothStepToAngle(&player->yRot_114, sp58.x, 0.1f / FRAME_FACTOR, 2.0f / FRAME_FACTOR,
+                                       0.0f); // 60fps adjustment
             }
 
             if (player->pos.y < player->pathHeight) {
                 if (player->unk_004 < 0.0f) {
-                    player->unk_004 += 0.2f;
+                    player->unk_004 += 0.2f / FRAME_FACTOR; // 60fps adjustment
                 }
             } else {
-                player->unk_004 -= 0.2f;
+                player->unk_004 -= 0.2f / FRAME_FACTOR; // 60fps adjustment
             }
 
             if (player->csTimer == 0) {
@@ -1503,8 +1512,9 @@ void Cutscene_UTurn(Player* player) {
             }
             break;
     }
-    player->pos.y += player->unk_004;
-    player->cam.at.y += player->unk_004;
+
+    player->pos.y += player->unk_004 / FRAME_FACTOR;    // 60fps
+    player->cam.at.y += player->unk_004 / FRAME_FACTOR; // 60fps
     player->bankAngle = player->rot.z + player->zRotBank + player->zRotBarrelRoll;
 
     Matrix_RotateY(gCalcMatrix, (player->yRot_114 + player->rot.y + 180.0f) * M_DTOR, MTXF_NEW);
@@ -1518,14 +1528,14 @@ void Cutscene_UTurn(Player* player) {
     player->vel.x = sp50.pos.x;
     player->vel.z = sp50.pos.z;
     player->vel.y = sp50.pos.y;
-    player->pos.x += player->vel.x;
-    player->pos.y += player->vel.y;
+    player->pos.x += player->vel.x / FRAME_FACTOR; // 60fps
+    player->pos.y += player->vel.y / FRAME_FACTOR; // 60fps
 
     if (player->pos.y < player->pathFloor) {
         player->pos.y = player->pathFloor;
         player->vel.y = 0.0f;
     }
-    player->pos.z += player->vel.z;
+    player->pos.z += player->vel.z / FRAME_FACTOR; // 60fps
     player->trueZpos = player->pos.z;
 
     Player_ArwingBoost(player);

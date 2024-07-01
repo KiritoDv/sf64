@@ -13,7 +13,7 @@ typedef struct {
     /* 0x14 */ s32 unk_14; // height
     /* 0x18 */ f32 unk_18; // xPos
     /* 0x1C */ f32 unk_1C; // yPos
-    /* 0x20 */ f32 unk_20; // xScale
+    /* 0x20 */ f32 xScale; // xScale
     /* 0x24 */ f32 unk_24; // yScale
     /* 0x28 */ s32 unk_28; // red
     /* 0x2C */ s32 unk_2C; // green
@@ -201,7 +201,7 @@ void Option_8019BE7C(f32, f32, f32, f32 *, f32 *, f32 *);
 void Option_8019BF34(void);
 void Option_8019C04C(void);
 void Option_DrawCardLabel(OptionTexture arg0);
-bool Option_8019C418(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, UnkStruct_D_menu_801B9250* arg8);
+bool Option_8019C418(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, UnkStruct_D_menu_801B9250* stick);
 s32 Option_8019C5A0(s32*);
 bool Option_8019C66C(f32* arg0, f32 arg1, f32 arg2, UnkStruct_D_menu_801B9250* arg3);
 void Option_8019C824(f32*);

@@ -2,10 +2,20 @@
 #define MACROS_H
 
 #include "alignment.h"
+#include "mods.h"
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
-#define SCREEN_MARGIN 8
+#define SCREEN_MARGIN 8 //theboy181 remove bars screen margins
+
+#if ENABLE_60FPS
+#define FRAME_FACTOR 2
+#endif
+
+#if !ENABLE_60FPS
+#define FRAME_FACTOR 1
+#endif
+
 
 #define RAND_FLOAT(max) (Rand_ZeroOne()*(max))
 #define RAND_INT(max) ((s32)(Rand_ZeroOne()*(max)))

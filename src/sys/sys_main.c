@@ -487,9 +487,12 @@ void Idle_ThreadEntry(void* arg0) {
     for (;;) {}
 }
 
+void isPrintfInit(void);
+
 void bootproc(void) {
     RdRam_CheckIPL3();
     osInitialize();
+    isPrintfInit();
     Main_Initialize();
     osCreateThread(&sIdleThread, THREAD_ID_IDLE, &Idle_ThreadEntry, NULL, sIdleThreadStack + sizeof(sIdleThreadStack),
                    255);

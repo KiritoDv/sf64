@@ -1037,7 +1037,7 @@ s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
         AudioHeap_AllocTemporarySampleCache(sample->size, fontId, sample->sampleAddr, sample->medium);
 
     if (slowLoad->curRamAddr == NULL) {
-        if ((sample->medium == MEDIUM_DISK) || (sample->codec == 2)) {
+        if ((sample->medium == MEDIUM_DISK) || (sample->codec == CODEC_DCTF)) {
             *status = SLOW_LOAD_STATUS_0;
             return -1;
         } else {

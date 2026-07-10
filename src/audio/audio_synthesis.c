@@ -491,15 +491,15 @@ void func_80009124(s16** arg0) {
 void func_80009504(s16* arg0, UnkStruct_800097A8* arg1) {
     s32 i;
 
-    if (arg1->unk_0 != NULL) {
-        arg1->unk_C = arg1->unk_0;
-        arg1->unk_0 = 0;
+    if (arg1->sampleAddr != NULL) {
+        arg1->unk_C = arg1->sampleAddr;
+        arg1->sampleAddr = NULL;
     }
 
-    arg1->unk18 += D_8014C1B4;
-    while (arg1->unk18 > 0x1000) {
+    arg1->unk_18 += D_8014C1B4;
+    while (arg1->unk_18 > 0x1000) {
         func_80009124(&arg1->unk_C);
-        arg1->unk18 -= 0x1000;
+        arg1->unk_18 -= 0x1000;
     }
 
     AudioSynth_InverseDiscreteCosineTransform(D_80145D48, D_80146148, 8, D_80146548);
@@ -544,16 +544,16 @@ s32 func_8000967C(s32 length, s16* ramAddr, UnkStruct_800097A8* arg2) {
     return temp_t0;
 }
 
-u8* func_800097A8(Sample* sample, s32 length, u32 flags, UnkStruct_800097A8* arg3) {
+u8* AudioSynth_DecodeDCTF(Sample* sample, s32 length, u32 flags, UnkStruct_800097A8* arg3) {
     s32 pad1;
-    SampleDma* pad2;
+    SampleDma* sampleDma1;
     SampleDma* sp1C;
 
     if (flags == A_INIT) {
-        arg3->unk_0 = (s16*) sample->sampleAddr;
+        arg3->sampleAddr = (s16*) sample->sampleAddr;
         arg3->unk_4 = 0;
         arg3->unk_8 = 0;
-        arg3->unk18 = 0;
+        arg3->unk_18 = 0;
 
         if (gSampleDmaReuseQueue1RdPos != gSampleDmaReuseQueue1WrPos) {
             arg3->unk_14 = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
@@ -571,9 +571,12 @@ u8* func_800097A8(Sample* sample, s32 length, u32 flags, UnkStruct_800097A8* arg
     sp1C->ttl = 2;
     sp1C->devAddr = sample->sampleAddr;
     sp1C->sizeUnused = length * 2;
-    pad2 = arg3->unk_14;
-    pad2->ttl = 2;
+
+    sampleDma1 = arg3->unk_14;
+    sampleDma1->ttl = 2;
+
     arg3->unk_8 += func_8000967C(length, (s16*) sp1C->ramAddr, arg3);
+
     return sp1C->ramAddr;
 }
 
@@ -591,6 +594,7 @@ Acmd* AudioSynth_SaveReverbRingBufferPart(Acmd* aList, u16 dmem, u16 startPos, s
     return aList;
 }
 
+// Original name: __Nas_WaveTerminateProcess
 void AudioSynth_DisableSampleStates(s32 updateIndex, s32 noteIndex) {
     NoteSampleState* sampleState;
     s32 i;
@@ -675,6 +679,7 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
     return aCmdPtr;
 }
 
+// Original name: Nas_LoadAuxBuffer
 Acmd* AudioSynth_LoadReverbSamples(Acmd* aList, s32 aiBufLen, s16 reverbIndex, s16 updateIndex) {
     ReverbRingBufferItem* sp64 = &gSynthReverbs[reverbIndex].items[gSynthReverbs[reverbIndex].curFrame][updateIndex];
     s16 sp62;
@@ -718,6 +723,7 @@ Acmd* AudioSynth_LoadReverbSamples(Acmd* aList, s32 aiBufLen, s16 reverbIndex, s
     return aList;
 }
 
+// Original name: Nas_SaveAuxBuffer
 Acmd* AudioSynth_SaveReverbSamples(Acmd* aList, s16 reverbIndex, s16 updateIndex) {
     ReverbRingBufferItem* sp24;
 
@@ -1026,9 +1032,9 @@ Acmd* AudioSynth_ProcessSample(s32 noteIndex, NoteSampleState* sampleState, Note
                         sampleDmaStart = 0;
                         break;
 
-                    case CODEC_S16_INMEMORY:
-                        buffAddr = func_800097A8(bookSample, numSamplesToLoadAdj, flags,
-                                                 &synthState->synthesisBuffers->unk_40);
+                    case CODEC_DCTF:
+                        buffAddr = AudioSynth_DecodeDCTF(bookSample, numSamplesToLoadAdj, flags,
+                                                         &synthState->synthesisBuffers->unk_40);
                         if (0) {}
                         aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(buffAddr), DMEM_UNCOMPRESSED_NOTE,
                                     (numSamplesToLoadAdj + SAMPLES_PER_FRAME) * 2);
@@ -1036,7 +1042,7 @@ Acmd* AudioSynth_ProcessSample(s32 noteIndex, NoteSampleState* sampleState, Note
                         skipBytes = 0;
                         numSamplesProcessed = numSamplesToLoadAdj;
                         dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
-                        goto skip;
+                        goto codec_dctf_break;
 
                     default:
                         break;
@@ -1144,7 +1150,7 @@ Acmd* AudioSynth_ProcessSample(s32 noteIndex, NoteSampleState* sampleState, Note
 
                 flags = A_CONTINUE;
 
-            skip:
+            codec_dctf_break:
 
                 // Update what to do with the samples next
                 if (sampleFinished) {
@@ -1276,6 +1282,7 @@ Acmd* AudioSynth_LoadWaveSamples(Acmd* aList, NoteSampleState* sampleState, Note
     return aList;
 }
 
+// Original name: Nas_Synth_Resample
 Acmd* AudioSynth_FinalResample(Acmd* aList, NoteSynthesisState* synthState, s32 size, u16 pitch, u16 inpDmem,
                                u32 resampleFlags) {
     if (pitch == 0) {
@@ -1287,6 +1294,7 @@ Acmd* AudioSynth_FinalResample(Acmd* aList, NoteSynthesisState* synthState, s32 
     return aList;
 }
 
+// Original name: Nas_Synth_Envelope
 Acmd* AudioSynth_ProcessEnvelope(Acmd* aList, NoteSampleState* sampleState, NoteSynthesisState* synthState,
                                  s32 aiBufLen, u16 dmemSrc, s32 delaySide, s32 flags) {
     s16 rampReverb;
@@ -1367,6 +1375,8 @@ Acmd* AudioSynth_ProcessEnvelope(Acmd* aList, NoteSampleState* sampleState, Note
 }
 
 /**
+ * Original name: Nas_Synth_Delay
+ *
  * The Haas Effect gives directionality to sound by applying a small (< 35ms) delay to either the left or right channel.
  * The delay is small enough that the sound is still perceived as one sound, but the channel that is not delayed will
  * reach our ear first and give a sense of directionality. The sound is directed towards the opposite side of the delay.

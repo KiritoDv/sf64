@@ -841,7 +841,7 @@ void Display_DrawEngineGlow(EngineGlowColor color) {
     gSPDisplayList(gMasterDisp++, aOrbDL);
 }
 
-void Display_LandmasterEngineGlow_Draw(Player* player) {
+void Display_PlayerEngineGlow_Draw(Player* player) {
     RCP_SetupDL_64();
     gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 100);
     Matrix_Push(&gGfxMatrix);
@@ -1179,7 +1179,7 @@ void Display_PlayerFeatures(Player* player) {
                 Matrix_RotateY(gGfxMatrix, -gPlayer[gPlayerNum].camYaw, MTXF_APPLY);
                 Matrix_RotateX(gGfxMatrix, gPlayer[gPlayerNum].camPitch, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                Display_LandmasterEngineGlow_Draw(player);
+                Display_PlayerEngineGlow_Draw(player);
                 Matrix_Pop(&gGfxMatrix);
                 Display_BarrelRollShield(player);
                 Display_UnusedShield(player);
@@ -1192,7 +1192,7 @@ void Display_PlayerFeatures(Player* player) {
                 Matrix_Translate(gGfxMatrix, D_display_80161518[player->num].x, D_display_80161518[player->num].y,
                                  D_display_80161518[player->num].z, MTXF_NEW);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                Display_LandmasterEngineGlow_Draw(player);
+                Display_PlayerEngineGlow_Draw(player);
                 Matrix_Pop(&gGfxMatrix);
                 Display_LandmasterLaserCharge(player);
                 break;

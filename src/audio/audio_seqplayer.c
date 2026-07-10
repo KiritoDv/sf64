@@ -700,9 +700,9 @@ void AudioSeq_SeqLayerProcessScript(SequenceLayer* layer) {
         }
     }
 
-    if ((layer->muted == false) && (layer->tunedSample != NULL) && (layer->tunedSample->sample->codec == 2) &&
-        (layer->tunedSample->sample->medium != 0)) {
-        layer->muted = 1;
+    if ((layer->muted == false) && (layer->tunedSample != NULL) && (layer->tunedSample->sample->codec == CODEC_DCTF) &&
+        (layer->tunedSample->sample->medium != MEDIUM_RAM)) {
+        layer->muted = true;
     }
     if (layer->muted == true) {
         if ((layer->note != NULL) || (layer->continuousNotes)) {

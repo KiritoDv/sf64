@@ -166,7 +166,7 @@ s32 Save_Read(void) {
     gSaveFile = gSaveIOBuffer;
 
     if (gSaveFile.save.checksum == Save_Checksum(&gSaveFile.save)) {
-        PRINTF("ＥＥＰＲＯＭ ＲＯＭ［０］ 正常\n");
+        PRINTF("ＥＥＰＲＯＭ ＲＯＭ［０］ 正常\n"); // EEPROM ROM[0] Normal
         return 0;
     }
 #ifdef AVOID_UB
@@ -179,10 +179,10 @@ s32 Save_Read(void) {
     gSaveFile.save.checksum = gSaveFile.backup.checksum;
 
     if (gSaveFile.save.checksum == Save_Checksum(&gSaveFile.save)) {
-        PRINTF("ＥＥＰＲＯＭ ＲＯＭ［1］ 正常\n");
+        PRINTF("ＥＥＰＲＯＭ ＲＯＭ［1］ 正常\n"); // EEPROM ROM[1] Normal
         return 0;
     } else {
-        PRINTF("ＥＥＰＲＯＭ ＲＯＭ［０］ ＆ ＲＯＭ［1］ 異常\n");
+        PRINTF("ＥＥＰＲＯＭ ＲＯＭ［０］ ＆ ＲＯＭ［1］ 異常\n"); // EEPROM ROM[0] & ROM[1] Error
         return -1;
     }
 }

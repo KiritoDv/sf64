@@ -123,7 +123,7 @@ typedef enum SampleMedium {
 typedef enum SampleCodec {
     /* 0 */ CODEC_ADPCM, // 16 2-byte samples (32 bytes) compressed into 4-bit samples (8 bytes) + 1 header byte
     /* 1 */ CODEC_S8,    // 16 2-byte samples (32 bytes) compressed into 8-bit samples (16 bytes)
-    /* 2 */ CODEC_S16_INMEMORY,
+    /* 2 */ CODEC_DCTF,
     /* 3 */ CODEC_SMALL_ADPCM, // 16 2-byte samples (32 bytes) compressed into 2-bit samples (4 bytes) + 1 header byte
     /* 4 */ CODEC_REVERB,
     /* 5 */ CODEC_S16
@@ -551,13 +551,13 @@ typedef struct SequenceLayer {
 } SequenceLayer; // size = 0x80
 
 typedef struct UnkStruct_800097A8 {
-    /* 0x00 */ s16* unk_0;
-    /* 0x04 */ s32 unk_4;
+    /* 0x00 */ s16* sampleAddr;
+    /* 0x04 */ s32 unk_4; // numSampleBlocks ?
     /* 0x08 */ s32 unk_8;
     /* 0x0C */ s16* unk_C;
     /* 0x10 */ char pad10[4];
     /* 0x14 */ struct SampleDma* unk_14;
-    /* 0x18 */ s16 unk18;
+    /* 0x18 */ s16 unk_18;
     /* 0x1A */ char pad1A[6];
 } UnkStruct_800097A8; /* size = 0x20 */
 

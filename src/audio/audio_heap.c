@@ -816,7 +816,7 @@ void AudioHeap_Init(void) {
     AudioLoad_InitSampleDmaBuffers(gNumNotes);
 
     gPreloadSampleStackTop = 0;
-    D_8014C1B4 = 0x1000;
+    gDCTF_PlaybackRate = 0x1000;
 
     osWritebackDCacheAll();
 }

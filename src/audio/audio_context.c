@@ -4,11 +4,10 @@
 u64 gAudioContextStart[2];
 SynthesisReverb gSynthReverbs[4];
 u8 sAudioContextPad10[0x10]; // 0x10
-// set to spec->unk_14, never used
-u16 D_8014C1B0;
+u16 D_8014C1B0;              // set to spec->unk_14, never used
 s8 gUseReverb;
 s8 gNumSynthReverbs;
-s16 D_8014C1B4; // IDCT related
+s16 gDCTF_PlaybackRate; // IDCT related
 NoteSampleState* gSampleStateList;
 // 0x4
 AudioAllocPool gSessionPool;
@@ -144,6 +143,8 @@ ReverbSettings D_800C76A8[] = {
     { 1, 0x30, 0x4FFF, 0, 0 },
     { 1, 0x30, 0x4FFF, 0, 0 },
 };
+
+// Original name: NA_SPEC_CONFIG
 AudioSpec gAudioSpecs[] = {
     /*  0 AUDIOSPEC_CO */
     { 32000, 2, 22, ARRAY_COUNT(sCoTrReverbSettings), sCoTrReverbSettings, 0x7FFF, 0x1200, 0x1100, 0, 0x5000, 0x2400, 0,

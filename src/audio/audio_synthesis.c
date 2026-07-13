@@ -21,9 +21,10 @@ typedef enum {
 s32 D_80145D40; // unused
 
 // all of these are part of the DFT-related function
-f32 D_80145D48[256];
-f32 D_80146148[256];
-f32 D_80146548[515];
+f32 gIDCT_Buffer[256];
+f32 gIDCT_Work[256];
+f32 gIDCT_CoefTable[515]; // precomputed rotation coefficient table for a fast IDCT
+
 f32 D_80146D54;
 f32 D_80146D58;
 f32 D_80146D5C;
@@ -370,7 +371,7 @@ void AudioSynth_HartleyTransform(f32* arg0, s32 arg1, f32* arg2) {
 #pragma GLOBAL_ASM("asm/us/rev1/nonmatchings/audio/audio_synthesis/AudioSynth_HartleyTransform.s")
 #endif
 
-void func_80009124(s16** arg0) {
+void AudioSynth_DCTF_ProcessBlockFreqDomain(s16** sampleBlockAddr) {
     s16* bufPtr;
     s32 shiftFactor;
     s32 mode;
@@ -384,11 +385,18 @@ void func_80009124(s16** arg0) {
     s32 i;
     s32 j;
 
-    bufPtr = *arg0;
+    /**
+     * Each compressed block begins with a 32-bit header. The header contains four 8-bit descriptors,
+     * one for each 64-coefficient partition of the 256-point transform.
+     * 256 coefficients -> 4 partitions -> 64 coefficients each ->one header byte controls each partition
+     */
+    bufPtr = *sampleBlockAddr;
 
+    // necessary because many modes don't write every coefficient.
     for (decodedBufIndex = 255; decodedBufIndex >= 0; decodedBufIndex--) {
-        D_80145D48[decodedBufIndex] = 0.0f;
+        gIDCT_Buffer[decodedBufIndex] = 0.0f;
     }
+
     headerPart = *bufPtr++;
     header = headerPart << 0x10;
     headerPart = *bufPtr++;
@@ -398,19 +406,21 @@ void func_80009124(s16** arg0) {
         decodedBufIndex = block * 0x40;
         blockHeader = (header >> 0x18) & 0xFF;
         header <<= 8;
+
         mode = ((blockHeader >> 4) & 0xF);
         if (mode == 0) {
             continue;
         }
         shiftFactor = blockHeader & 0xF;
+
         switch (mode) {
-            case 1:
+            case 1: // Variable-length 4-bit signed coefficients
                 while (true) {
                     bufValue = *bufPtr++;
                     for (i = 0; i < 4; i++) {
                         temp_u1 = (bufValue >> 0xC) & 0xF;
                         bufValue <<= 4;
-                        D_80145D48[(u32) decodedBufIndex++] = ((temp_u1 & 7) - 4) << shiftFactor;
+                        gIDCT_Buffer[(u32) decodedBufIndex++] = ((temp_u1 & 7) - 4) << shiftFactor;
                         if (temp_u1 >= 8) {
                             goto case_1_break;
                         }
@@ -418,64 +428,69 @@ void func_80009124(s16** arg0) {
                 }
             case_1_break:
                 continue;
-            case 2:
+
+            case 2: // Fixed-length packed 4-bit coefficients
                 for (i = 0; i < 16; i++) {
                     bufValue = *bufPtr++;
                     for (j = 0; j < 4; j++) {
                         temp_u1 = (bufValue >> 0xC) & 0xF;
                         bufValue <<= 4;
-                        D_80145D48[decodedBufIndex++] = (temp_u1 - 8) << shiftFactor;
+                        gIDCT_Buffer[decodedBufIndex++] = (temp_u1 - 8) << shiftFactor;
                     }
                 }
                 break;
-            case 6:
+
+            case 6: // Run-length encoded sparse coefficients
                 while (true) {
                     bufValue = *bufPtr++;
                     temp_u1 = (bufValue >> 8) & 0xFF;
-                    D_80145D48[decodedBufIndex] = ((temp_u1 & 0x3F) - 0x20) << shiftFactor;
+                    gIDCT_Buffer[decodedBufIndex] = ((temp_u1 & 0x3F) - 0x20) << shiftFactor;
                     if (temp_u1 >> 6 == 0) {
                         break;
                     }
                     decodedBufIndex += temp_u1 >> 6;
                     temp_u1 = bufValue & 0xFF;
-                    D_80145D48[decodedBufIndex] = ((temp_u1 & 0x3F) - 0x20) << shiftFactor;
+                    gIDCT_Buffer[decodedBufIndex] = ((temp_u1 & 0x3F) - 0x20) << shiftFactor;
                     if (temp_u1 >> 6 == 0) {
                         break;
                     }
                     decodedBufIndex += temp_u1 >> 6;
                 }
                 break;
-            case 3:
+
+            case 3: // Variable-length 7-bit coefficients
                 while (true) {
                     bufValue = *bufPtr++;
                     temp_u1 = (bufValue >> 8) & 0xFF;
 
-                    D_80145D48[decodedBufIndex++] = ((temp_u1 & 0x7F) - 0x40) << shiftFactor;
+                    gIDCT_Buffer[decodedBufIndex++] = ((temp_u1 & 0x7F) - 0x40) << shiftFactor;
 
                     if (temp_u1 >= 0x80) {
                         break;
                     }
                     temp_u1 = bufValue & 0xFF;
-                    D_80145D48[decodedBufIndex++] = ((temp_u1 & 0x7F) - 0x40) << shiftFactor;
+                    gIDCT_Buffer[decodedBufIndex++] = ((temp_u1 & 0x7F) - 0x40) << shiftFactor;
                     if (temp_u1 >= 0x80) {
                         break;
                     }
                 }
                 continue;
-            case 4:
+
+            case 4: // Variable-length 12-bit coefficients
                 while (true) {
                     bufValue = *bufPtr++;
-                    D_80145D48[decodedBufIndex] = ((bufValue & 0xFFF) - 0x800) << shiftFactor;
+                    gIDCT_Buffer[decodedBufIndex] = ((bufValue & 0xFFF) - 0x800) << shiftFactor;
                     if (bufValue >> 0xC == 0) {
                         break;
                     }
                     decodedBufIndex += bufValue >> 0xC;
                 }
                 break;
-            case 5:
+
+            case 5: // Variable-length 15-bit coefficients
                 while (true) {
                     bufValue = *bufPtr++;
-                    D_80145D48[decodedBufIndex] = ((bufValue & 0x7FFF) - 0x4000) << shiftFactor;
+                    gIDCT_Buffer[decodedBufIndex] = ((bufValue & 0x7FFF) - 0x4000) << shiftFactor;
                     if (bufValue >> 0xF == 1) {
                         break;
                     }
@@ -485,99 +500,102 @@ void func_80009124(s16** arg0) {
         }
         if (decodedBufIndex) {}
     }
-    *arg0 = bufPtr;
+
+    *sampleBlockAddr = bufPtr;
 }
 
-void func_80009504(s16* arg0, UnkStruct_800097A8* arg1) {
+void AudioSynth_DCTF_ProcessBlock(s16* ramAddr, DCTF_Sample* DCTFSample) {
     s32 i;
 
-    if (arg1->sampleAddr != NULL) {
-        arg1->unk_C = arg1->sampleAddr;
-        arg1->sampleAddr = NULL;
+    if (DCTFSample->sampleAddr != NULL) {
+        DCTFSample->sampleBlockAddr = DCTFSample->sampleAddr;
+        DCTFSample->sampleAddr = NULL;
     }
 
-    arg1->unk_18 += D_8014C1B4;
-    while (arg1->unk_18 > 0x1000) {
-        func_80009124(&arg1->unk_C);
-        arg1->unk_18 -= 0x1000;
+    DCTFSample->freqBlockAcc += gDCTF_PlaybackRate;
+    while (DCTFSample->freqBlockAcc > 0x1000) {
+        AudioSynth_DCTF_ProcessBlockFreqDomain(&DCTFSample->sampleBlockAddr);
+        DCTFSample->freqBlockAcc -= 0x1000;
     }
 
-    AudioSynth_InverseDiscreteCosineTransform(D_80145D48, D_80146148, 8, D_80146548);
+    AudioSynth_InverseDiscreteCosineTransform(gIDCT_Buffer, gIDCT_Work, 8, gIDCT_CoefTable);
 
-    for (i = 0; i < ARRAY_COUNT(D_80145D48); i++) {
-        if (D_80145D48[i] > 32767.0f) {
-            D_80145D48[i] = 32767.0f;
+    for (i = 0; i < ARRAY_COUNT(gIDCT_Buffer); i++) {
+        if (gIDCT_Buffer[i] > 32767.0f) {
+            gIDCT_Buffer[i] = 32767.0f;
         }
-        if (D_80145D48[i] < -32767.0f) {
-            D_80145D48[i] = -32767.0f;
+        if (gIDCT_Buffer[i] < -32767.0f) {
+            gIDCT_Buffer[i] = -32767.0f;
         }
     }
 
-    for (i = 0; i < ARRAY_COUNT(D_80145D48); i++, arg0++) {
-        *arg0 = D_80145D48[i];
+    for (i = 0; i < ARRAY_COUNT(gIDCT_Buffer); i++, ramAddr++) {
+        *ramAddr = (s16) gIDCT_Buffer[i];
     }
 }
 
-s32 func_8000967C(s32 length, s16* ramAddr, UnkStruct_800097A8* arg2) {
+s32 AudioSynth_DCTF_ProcessSample(s32 length, s16* ramAddr, DCTF_Sample* DCTFSample) {
     s32 pad;
-    s32 temp_t0;
+    s32 maxSampleBlocks;
     s32 i;
-    s32 var_s1;
-    s16* temp_t7 = (s16*) arg2->unk_14->ramAddr;
+    s32 blockIdx;
+    s16* sampleDmaInQueueAddr = (s16*) DCTFSample->dmaInQueue->ramAddr;
 
-    for (i = 0; i < arg2->unk_4; i++) {
-        ramAddr[i] = temp_t7[i];
+    for (i = 0; i < DCTFSample->numSampleBlocks; i++) {
+        ramAddr[i] = sampleDmaInQueueAddr[i];
     }
 
-    var_s1 = arg2->unk_4;
-    temp_t0 = (length - arg2->unk_4 + 0xFF) / 256;
-    arg2->unk_4 = (temp_t0 * 256) + arg2->unk_4 - length;
+    blockIdx = DCTFSample->numSampleBlocks;
+    maxSampleBlocks = (length - DCTFSample->numSampleBlocks + 255) / 256;
+    DCTFSample->numSampleBlocks = (maxSampleBlocks * 256) + DCTFSample->numSampleBlocks - length;
 
-    for (i = 0; i < temp_t0; i++) {
-        func_80009504(&ramAddr[var_s1], arg2);
-        var_s1 += 0x100;
+    for (i = 0; i < maxSampleBlocks; i++) {
+        AudioSynth_DCTF_ProcessBlock(&ramAddr[blockIdx], DCTFSample);
+        blockIdx += 0x100;
     }
 
-    for (i = 0; i < arg2->unk_4; i++) {
-        temp_t7[i] = ramAddr[length + i];
+    for (i = 0; i < DCTFSample->numSampleBlocks; i++) {
+        sampleDmaInQueueAddr[i] = ramAddr[length + i];
     }
-    return temp_t0;
+
+    return maxSampleBlocks;
 }
 
-u8* AudioSynth_DecodeDCTF(Sample* sample, s32 length, u32 flags, UnkStruct_800097A8* arg3) {
-    s32 pad1;
-    SampleDma* sampleDma1;
-    SampleDma* sp1C;
+// Sets up DMA and Decoding parameters for a CODEC_DCTF type sample
+u8* AudioSynth_DCTF_Decode(Sample* bookSample, s32 length, u32 flags, DCTF_Sample* DCTFSample) {
+    s32 pad;
+    SampleDma* sampleDmaInQueue;
+    SampleDma* destSample; // Destination Sample to be decoded as 16-bit PCM
 
     if (flags == A_INIT) {
-        arg3->sampleAddr = (s16*) sample->sampleAddr;
-        arg3->unk_4 = 0;
-        arg3->unk_8 = 0;
-        arg3->unk_18 = 0;
+        DCTFSample->sampleAddr = (s16*) bookSample->sampleAddr;
+        DCTFSample->numSampleBlocks = 0;
+        DCTFSample->maxSampleBlocks = 0;
+        DCTFSample->freqBlockAcc = 0;
 
         if (gSampleDmaReuseQueue1RdPos != gSampleDmaReuseQueue1WrPos) {
-            arg3->unk_14 = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
-            arg3->unk_14->devAddr = -1;
-            arg3->unk_14->sizeUnused = 0;
+            DCTFSample->dmaInQueue = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
+            DCTFSample->dmaInQueue->devAddr = -1;
+            DCTFSample->dmaInQueue->sizeUnused = 0;
         }
     }
 
     if (gSampleDmaReuseQueue1RdPos != gSampleDmaReuseQueue1WrPos) {
-        sp1C = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
+        destSample = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
     }
 
     if (1) {} //! FAKE
 
-    sp1C->ttl = 2;
-    sp1C->devAddr = sample->sampleAddr;
-    sp1C->sizeUnused = length * 2;
+    destSample->ttl = 2;
+    destSample->devAddr = bookSample->sampleAddr;
+    destSample->sizeUnused = length * 2;
 
-    sampleDma1 = arg3->unk_14;
-    sampleDma1->ttl = 2;
+    sampleDmaInQueue = DCTFSample->dmaInQueue;
+    sampleDmaInQueue->ttl = 2;
 
-    arg3->unk_8 += func_8000967C(length, (s16*) sp1C->ramAddr, arg3);
+    DCTFSample->maxSampleBlocks += AudioSynth_DCTF_ProcessSample(length, (s16*) destSample->ramAddr, DCTFSample);
 
-    return sp1C->ramAddr;
+    return destSample->ramAddr;
 }
 
 Acmd* AudioSynth_LoadReverbRingBufferPart(Acmd* aList, u16 dmem, u16 startPos, s32 size, s32 reverbIndex) {
@@ -877,7 +895,7 @@ Acmd* AudioSynth_ProcessSample(s32 noteIndex, NoteSampleState* sampleState, Note
     s32 dmemUncompressedAddrOffset1;
     u32 sampleslenFixedPoint;
     u8* samplesToLoadAddr;
-    s32 buffAddr;
+    s32 DCTFSampleAddr;
     s32 gain;
     u32 nEntries;
     s32 aligned;
@@ -1033,10 +1051,10 @@ Acmd* AudioSynth_ProcessSample(s32 noteIndex, NoteSampleState* sampleState, Note
                         break;
 
                     case CODEC_DCTF:
-                        buffAddr = AudioSynth_DecodeDCTF(bookSample, numSamplesToLoadAdj, flags,
-                                                         &synthState->synthesisBuffers->unk_40);
+                        DCTFSampleAddr = AudioSynth_DCTF_Decode(bookSample, numSamplesToLoadAdj, flags,
+                                                                &synthState->synthesisBuffers->DCTFSample);
                         if (0) {}
-                        aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(buffAddr), DMEM_UNCOMPRESSED_NOTE,
+                        aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(DCTFSampleAddr), DMEM_UNCOMPRESSED_NOTE,
                                     (numSamplesToLoadAdj + SAMPLES_PER_FRAME) * 2);
                         flags = A_CONTINUE;
                         skipBytes = 0;

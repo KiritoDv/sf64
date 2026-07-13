@@ -123,7 +123,7 @@ typedef enum SampleMedium {
 typedef enum SampleCodec {
     /* 0 */ CODEC_ADPCM, // 16 2-byte samples (32 bytes) compressed into 4-bit samples (8 bytes) + 1 header byte
     /* 1 */ CODEC_S8,    // 16 2-byte samples (32 bytes) compressed into 8-bit samples (16 bytes)
-    /* 2 */ CODEC_DCTF,
+    /* 2 */ CODEC_DCTF, // DCTF stores audio in the frequency domain rather than directly as PCM samples. Each compressed block represents 256 frequency coefficients which are decoded into floating-point values and transformed back into time-domain PCM using an Inverse Discrete Cosine Transform (IDCT).
     /* 3 */ CODEC_SMALL_ADPCM, // 16 2-byte samples (32 bytes) compressed into 2-bit samples (4 bytes) + 1 header byte
     /* 4 */ CODEC_REVERB,
     /* 5 */ CODEC_S16
@@ -550,21 +550,21 @@ typedef struct SequenceLayer {
     /* 0x7C */ char pad7C[4];
 } SequenceLayer; // size = 0x80
 
-typedef struct UnkStruct_800097A8 {
+typedef struct DCTF_Sample {
     /* 0x00 */ s16* sampleAddr;
-    /* 0x04 */ s32 unk_4; // numSampleBlocks ?
-    /* 0x08 */ s32 unk_8;
-    /* 0x0C */ s16* unk_C;
+    /* 0x04 */ s32 numSampleBlocks; // Number of leftover sample blocks to be decoded
+    /* 0x08 */ s32 maxSampleBlocks;
+    /* 0x0C */ s16* sampleBlockAddr;
     /* 0x10 */ char pad10[4];
-    /* 0x14 */ struct SampleDma* unk_14;
-    /* 0x18 */ s16 unk_18;
+    /* 0x14 */ struct SampleDma* dmaInQueue;
+    /* 0x18 */ s16 freqBlockAcc; // Frequency Block Accumulator
     /* 0x1A */ char pad1A[6];
-} UnkStruct_800097A8; /* size = 0x20 */
+} DCTF_Sample; /* size = 0x20 */
 
 typedef struct NoteSynthesisBuffers {
     /* 0x000 */ s16 adpcmdecState[16];
     /* 0x020 */ s16 finalResampleState[16];
-    /* 0x040 */ UnkStruct_800097A8 unk_40;
+    /* 0x040 */ DCTF_Sample DCTFSample;
     /* 0x060 */ char pad[0x20];
     /* 0x080 */ s16 panSamplesBuffer[0x20];
     // /* 0x040 */ s16 mixEnvelopeState[32];
@@ -1196,7 +1196,7 @@ extern u8 sAudioContextPad10[0x10]; // 0x10
 extern u16 D_8014C1B0;
 extern s8 gUseReverb;
 extern s8 gNumSynthReverbs;
-extern s16 D_8014C1B4;
+extern s16 gDCTF_PlaybackRate;
 extern NoteSampleState* gSampleStateList;
 // 0x4
 extern AudioAllocPool gSessionPool;
